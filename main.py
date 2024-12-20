@@ -1,8 +1,6 @@
 from bokeh.models import CategoricalColorMapper, LogColorMapper, ColorBar, BasicTicker, NumeralTickFormatter
 from bokeh.palettes import Viridis6
 from bokeh.plotting import figure
-# from bokeh.sampledata.unemployment import data as unemployment
-# from bokeh.sampledata.us_counties import data as counties
 from bokeh.embed import file_html
 import streamlit as st
 import streamlit.components.v1 as components
@@ -45,6 +43,12 @@ st.title("Metro Atlanta Census Tracts")
 # Step 2: Load the Geopackage File
 # Replace 'your_file.gpkg' with the path to your geopackage file
 gdf = gpd.read_file('../../Geographies/ARC_CTs.gpkg')
+gdf = gdf[[
+    'COUNTYFP',
+    'GEOID',
+    'NAME',
+    'geometry'
+]]
 
 # Step 3: Filter Data for Metro Atlanta Area
 st.write(gdf.head())
@@ -54,15 +58,14 @@ st.write(gdf.head())
 gdf = gdf.to_crs(epsg=3857)
 
 # Step 5: Extract Coordinates for Bokeh Patches
-# Step 5: Extract Coordinates for Bokeh Patches
 tract_xs = []
 tract_ys = []
 
 for geom in gdf.geometry:
-    if geom.type == "Polygon":  # Single Polygon
+    if geom.geom_type == "Polygon":  # Single Polygon
         tract_xs.append(list(geom.exterior.coords.xy[0]))
         tract_ys.append(list(geom.exterior.coords.xy[1]))
-    elif geom.type == "MultiPolygon":  # MultiPolygon
+    elif geom.geom_type == "MultiPolygon":  # MultiPolygon
         for poly in geom.geoms:  # Iterate over each Polygon in the MultiPolygon
             tract_xs.append(list(poly.exterior.coords.xy[0]))
             tract_ys.append(list(poly.exterior.coords.xy[1]))
