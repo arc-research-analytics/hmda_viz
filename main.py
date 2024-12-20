@@ -41,8 +41,7 @@ st.markdown(hide_default_format, unsafe_allow_html=True)
 st.title("Metro Atlanta Census Tracts")
 
 # Step 2: Load the Geopackage File
-# Replace 'your_file.gpkg' with the path to your geopackage file
-gdf = gpd.read_file('../../Geographies/ARC_CTs.gpkg')
+gdf = gpd.read_file('data/ARC_CTs.gpkg')
 gdf = gdf[[
     'COUNTYFP',
     'GEOID',
